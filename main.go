@@ -1,10 +1,13 @@
-package main 
+package main
 
-import(
-	"PROJETO_SISTEMAS_DISTRIBUIDOS/controller"
+import (
+	// "PROJETO_SISTEMAS_DISTRIBUIDOS/controller"
+	"PROJETO_SISTEMAS_DISTRIBUIDOS/database"
 )
 
 func main(){
-	controller.CadastrarUsuario()
-	controller.Questionario()
+	database.Database()
+	database.CriarTabela()
+	// controller.CadastrarUsuario()
+	// controller.Questionario()
 }
