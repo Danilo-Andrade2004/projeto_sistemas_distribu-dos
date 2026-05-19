@@ -1,71 +1,119 @@
 package controller
 
 import(
-	"fmt"
+	"encoding/json"
+	"net/http"
+	"PROJETO_SISTEMAS_DISTRIBUIDOS/database"
 )
 
-func CadastrarUsuario(){
+type Usuario struct{
+	Curso string `json:"curso"`
+	Turno string `json:"turno"`
+	Sexo string `json:"sexo"`
+}
 
-	var curso string
-	var turno string
-	var numero int
+func CadastrarUsuario(
+	w http.ResponseWriter,
+	r *http.Request,){
 
-	fmt.Println("Digite qual é o seu curso: ")
-	fmt.Printf("1 - Administração\n2 - Química\n3 - Informática\n4 - Adm_Subsequente\n5 - TPQ\n6 - TADS\n")
-	fmt.Scan(&numero)
+		w.Header().Set("Content-Type", "application/json")
 
-	switch numero{
-	case 1:
-		curso = "Administração"
-	case 2:
-		curso = "Química"
-	case 3:
-		curso = "Informática"
-	case 4:
-		curso = "Adm_Subsequente"
-	case 5:
-		curso = "TPQ"
-	case 6:
-		curso = "TADS"
-	default:
-		fmt.Println("ERRO: Digite um número válido")
-	}
-	fmt.Println("--------------------------------------------------")
+		var input struct {
+		Curso int `json:"curso"`
+		Turno int `json:"turno"`
+		Sexo  int `json:"sexo"`
+	    }
 
-	fmt.Println("Digite o turno que você estuda: ")
-	fmt.Printf("1 - Matutino\n2 - Vespertino\n3 - Noturno\n")
-	fmt.Scan(&numero)
+		err := json.NewDecoder(r.Body).Decode(&input)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{
+				"erro": "JSON inválido",
+			})
+			return
+		}
 
-	switch numero {
-	case 1:
-		turno = "Matutino"
-	case 2:
-		turno = "Vespertino"
-	case 3:
-		turno = "Noturno"
-	default:
-		fmt.Println("ERRO: Digite um número válido")
-	}
-	fmt.Println("--------------------------------------------------")
+		var curso string
+		switch input.Curso{
+		case 1:
+			curso = "Administração"
+		case 2:
+			curso = "Química"
+		case 3:
+			curso = "Informática"
+		case 4:
+			curso = "Adm_Subsequente"
+		case 5:
+			curso = "TPQ"
+		case 6:
+			curso = "TADS"
+		default:
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{
+				"erro": "curso inválido",
+			})
+		return
+		}
 
-	var sexo string
-	fmt.Println("Digite o seu sexo: ")
-	fmt.Println("1 - Masculino\n2 - Feminino")
-	fmt.Scan(&numero)
+		var turno string
+		switch input.Turno{
+			case 1:
+				turno = "Matutino"
+			case 2:
+				turno = "Vespertino"
+			case 3:
+				turno = "Noturno"
+			default:
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(map[string]string{
+					"erro": "turno inválido",
+				})
+				return
+		}
 
-	switch numero {
-	case 1:
-		sexo = "Masculino"
-	case 2:
-		sexo = "Feminino"
-	default:
-		fmt.Println("ERRO: Digite um número válido")
-	}
+		var sexo string
+		switch input.Sexo{
+			case 1:
+				sexo = "Masculino"
+			case 2:
+				sexo = "Feminino"
+			default:
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(map[string]string{
+					"erro": "sexo inválido",
+				})
+				return
+		}
 
-	fmt.Println("--------------------------------------------------")
-	fmt.Println("Formulário de cadastro preenchido com sucesso!")
-	fmt.Println("--------------------------------------------------")
-	fmt.Println("O seu curso é: ", curso)
-	fmt.Println("O seu turno é: ", turno)
-	fmt.Println("O seu sexo é: ", sexo)
+		query := `INSERT INTO usuarios (curso, turno, sexo) VALUES ($1, $2, $3) RETURNING Usuario_id`
+	
+		var usuarioID int
+	
+		
+		err = database.DB.QueryRow(query, curso, turno, sexo).Scan(&usuarioID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{
+				"erro": "Erro ao salvar no banco de dados: " + err.Error(),
+			})
+			return
+		}
+
+		resposta := Usuario{
+			Curso: curso,
+			Turno: turno,
+			Sexo:  sexo,
+		}
+
+    	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		
+    	mensagem := "🎉 Cadastro Realizado com Sucesso!\n" +
+    	            "---------------------------------\n" +
+    	            "📚 Curso: " + resposta.Curso + "\n" +
+    	            "⏰ Turno: " + resposta.Turno + "\n" +
+    	            "👤 Sexo:  " + resposta.Sexo + "\n" +
+    	            "---------------------------------"
+    	w.Write([]byte(mensagem))
+
+		// json.NewEncoder(w).Encode(resposta)
 }

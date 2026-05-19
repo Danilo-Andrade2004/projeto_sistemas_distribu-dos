@@ -9,13 +9,17 @@ import(
 var DB *sql.DB
 
 func Database(){
+	var erro error
 	
 	DB, _ = sql.Open(
 		"postgres", 
 		"host=localhost user=postgres password=admin dbname=Questionario port=5432 sslmode=disable",
 	)
+	if erro != nil {
+        panic(erro)
+    }
 
-	erro := DB.Ping()
+	erro = DB.Ping()
 	if erro != nil{
 		panic(erro)
 	}
@@ -29,31 +33,30 @@ func CriarTabela(){
 
 	_, erro := DB.Exec(`
 		CREATE TABLE IF NOT EXISTS usuarios(
-			id_Usuario SERIAL PRIMARY KEY,
+			Usuario_id SERIAL PRIMARY KEY,
 			curso VARCHAR(50) NOT NULL,
 			turno VARCHAR(50) NOT NULL,
 			sexo VARCHAR(50) NOT NULL
 		);
 
-		CREATE TABLE IF NOT EXISTS questionarios(
-			id SERIAL PRIMARY KEY,
-			pergunta1 INT NOT NULL,
-			pergunta2 INT NOT NULL,
-			pergunta3 INT NOT NULL,
-			pergunta4 INT NOT NULL,
-			pergunta5 INT NOT NULL,
-			pergunta6 INT NOT NULL,
-			pergunta7 INT NOT NULL,
-			pergunta8 INT NOT NULL,
-			pergunta9 INT NOT NULL,
-			pergunta10 INT NOT NULL,
+		CREATE TABLE IF NOT EXISTS questionario(
 
+			id_Usuario INT PRIMARY KEY,
+
+			sala_de_aula INT NOT NULL,
+			conversar_com_colegas INT NOT NULL,
+			professores INT NOT NULL,
+			campus INT NOT NULL,
+			emocional_semana INT NOT NULL,
+			motivacao_estudos INT NOT NULL,
+			ansiedade_escolar INT NOT NULL,
+			voz_na_escola INT NOT NULL,
+			qualidade_sono INT NOT NULL,
+			bem_estar_geral INT NOT NULL,
 			comentario TEXT,
 
-			id_Usuario INT NOT NULL,
-
 			FOREIGN KEY (id_Usuario)
-			REFERENCES usuarios(id_Usuario)
+			REFERENCES usuarios(Usuario_id)
 		);
 	`)
 	if erro != nil{

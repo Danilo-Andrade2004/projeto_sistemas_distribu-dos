@@ -4,9 +4,13 @@ import(
 	"fmt"
 	"bufio"
 	"os"
+    "net/http"
+    // "PROJETO_SISTEMAS_DISTRIBUIDOS/database"
 )
 
-func Questionario(){
+func Questionario(
+    w http.ResponseWriter,
+	r *http.Request,){
     var comentario string
     var numero int
 
