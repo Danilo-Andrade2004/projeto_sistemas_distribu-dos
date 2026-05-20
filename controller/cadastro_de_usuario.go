@@ -7,113 +7,99 @@ import(
 )
 
 type Usuario struct{
-	Curso string `json:"curso"`
-	Turno string `json:"turno"`
-	Sexo string `json:"sexo"`
+	Curso_Estuda int `json:"curso"`
+	Turno_Estuda int `json:"turno"`
+	Sexo int 		 `json:"sexo"`
 }
 
-func CadastrarUsuario(
-	w http.ResponseWriter,
-	r *http.Request,){
 
-		w.Header().Set("Content-Type", "application/json")
 
-		var input struct {
-		Curso int `json:"curso"`
-		Turno int `json:"turno"`
-		Sexo  int `json:"sexo"`
-	    }
+func PostCadastrarUsuario(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
 
-		err := json.NewDecoder(r.Body).Decode(&input)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{
-				"erro": "JSON inválido",
-			})
-			return
-		}
-
-		var curso string
-		switch input.Curso{
-		case 1:
-			curso = "Administração"
-		case 2:
-			curso = "Química"
-		case 3:
-			curso = "Informática"
-		case 4:
-			curso = "Adm_Subsequente"
-		case 5:
-			curso = "TPQ"
-		case 6:
-			curso = "TADS"
-		default:
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{
-				"erro": "curso inválido",
-			})
+	var usuario Usuario
+	err := json.NewDecoder(r.Body).Decode(&usuario)
+	if err != nil{
+		http.Error(w,"Erro!, JSON inválido!", http.StatusBadRequest)
 		return
-		}
+	}
 
-		var turno string
-		switch input.Turno{
-			case 1:
-				turno = "Matutino"
-			case 2:
-				turno = "Vespertino"
-			case 3:
-				turno = "Noturno"
-			default:
-				w.WriteHeader(http.StatusBadRequest)
-				json.NewEncoder(w).Encode(map[string]string{
-					"erro": "turno inválido",
-				})
-				return
-		}
+	var curso_nome string
+	switch usuario.Curso_Estuda{
+	case 1:
+		curso_nome = "Informática"
+	case 2:
+		curso_nome = "Administração"
+	case 3:
+		curso_nome = "Química"
+	case 4:
+		curso_nome = "Adm_Subsequente"
+	case 5:
+		curso_nome = "TPQ"
+	case 6:
+		curso_nome = "TADS"
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{
+			"erro": "curso inválido",})
+		return
+	}
 
-		var sexo string
-		switch input.Sexo{
-			case 1:
-				sexo = "Masculino"
-			case 2:
-				sexo = "Feminino"
-			default:
-				w.WriteHeader(http.StatusBadRequest)
-				json.NewEncoder(w).Encode(map[string]string{
-					"erro": "sexo inválido",
-				})
-				return
-		}
+	var turno string
+	switch usuario.Turno_Estuda{
+	case 1:
+		turno = "Matutino"
+	case 2:
+		turno = "Vespertino"
+	case 3:
+		turno = "Noturno"
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{
+			"erro": "turno inválido",})
+		return
+	}
 
-		query := `INSERT INTO usuarios (curso, turno, sexo) VALUES ($1, $2, $3) RETURNING Usuario_id`
-	
-		var usuarioID int
-	
-		
-		err = database.DB.QueryRow(query, curso, turno, sexo).Scan(&usuarioID)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{
-				"erro": "Erro ao salvar no banco de dados: " + err.Error(),
-			})
-			return
-		}
+	var sexo string
+	switch usuario.Sexo{
+	case 1:
+		sexo = "Masculino"
+	case 2:
+		sexo = "Feminino"
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{
+			"erro": "sexo inválido"})
+		return
+	}
 
-		resposta := Usuario{
-			Curso: curso,
-			Turno: turno,
-			Sexo:  sexo,
-		}
+	var usuarioID int
 
-    	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		
-    	mensagem := "🎉 Cadastro Realizado com Sucesso!\n" +
-    	            "---------------------------------\n" +
-    	            "📚 Curso: " + resposta.Curso + "\n" +
-    	            "⏰ Turno: " + resposta.Turno + "\n" +
-    	            "👤 Sexo:  " + resposta.Sexo + "\n" +
-    	            "---------------------------------"
-    	w.Write([]byte(mensagem))
+	err = database.DB.QueryRow(`
+		INSERT INTO usuarios (curso, turno, sexo)
+		VALUES ($1, $2, $3)
+		RETURNING usuarioID
+	`, curso_nome, turno, sexo).Scan(&usuarioID)
 
-		// json.NewEncoder(w).Encode(resposta)
+	if err != nil{
+		json.NewEncoder(w).Encode(map[string]string{
+			"erro": "erro ao salvar no banco",
+		})
+	}
+
+	type Response struct{
+		UsuarioID int `json:"usuario_id"`
+		Curso string `json:"curso"`
+		Turno string `json:"turno"`
+		Sexo string `json:"sexo"`
+	}
+
+	resp := Response{
+		UsuarioID: usuarioID,
+		Curso: curso_nome,
+		Turno: turno,
+		Sexo:  sexo,
+	}
+
+	json.NewEncoder(w).Encode(resp)
 }

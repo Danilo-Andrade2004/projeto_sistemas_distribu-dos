@@ -1,217 +1,250 @@
 package controller
 
 import(
-	"fmt"
-	"bufio"
-	"os"
+    "encoding/json"
     "net/http"
-    // "PROJETO_SISTEMAS_DISTRIBUIDOS/database"
+    "PROJETO_SISTEMAS_DISTRIBUIDOS/database"
 )
 
-func Questionario(
-    w http.ResponseWriter,
-	r *http.Request,){
-    var comentario string
-    var numero int
+type Questionario struct{
+    UsuarioID int `json:"usuario_id"`
+    Pergunta1 int `json:"sala_de_aula"`
+    Pergunta2 int `json:"conversar_com_colegas"`
+    Pergunta3 int `json:"professores"`
+    Pergunta4 int `json:"campus"`
+    Pergunta5 int `json:"emocional_semana"`
+    Pergunta6 int `json:"motivacao_estudos"`
+    Pergunta7 int `json:"ansiedade_escolar"`
+    Pergunta8 int `json:"voz_na_escola"`
+    Pergunta9 int `json:"qualidade_sono"`
+    Pergunta10 int `json:"bem_estar_geral"`
+    Comentario string `json:"quer_deixar_um_comentario?"`
+}
 
-    fmt.Printf("\n***AMBIENTE ESCOLAR***\n")
-    fmt.Println("Como você se sente dentro da sala de aula?")
-	fmt.Println("1 - BEM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
 
-    switch numero{
-        case 1:
-        fmt.Println("BEM")
-        
-        case 2:
-        fmt.Println("MAIS OU MENOS")
 
-        case 3:
-        fmt.Println("MAL")
+func PostResponderQuestionario(w http.ResponseWriter, r *http.Request){
 
-        default:
-        fmt.Println("ERRO! digite um número válido!")
+    w.Header().Set("Content-Type", "application/json")
+    
+    var questionario Questionario
+    err := json.NewDecoder(r.Body).Decode(&questionario)
+    if err != nil{
+        http.Error(w,"Erro!, JSON inválido!", http.StatusBadRequest)
+        return
     }
-    fmt.Println("**************************************************")
 
-    fmt.Println("Como você se sente ao conversar com colegas?")
-	fmt.Println("1 - BEM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
+    var p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 string
 
-    switch numero{
+    switch questionario.Pergunta1{
         case 1:
-        fmt.Println("BEM")
-        
+        p1 = "Bem"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p1 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p1 = "Mal"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 1",})
+        return
     }
-    fmt.Println("**************************************************")
 
-    fmt.Println("Como você se sente em relação aos professores?")
-	fmt.Println("1 - BEM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta2{
         case 1:
-        fmt.Println("BEM")
-        
+        p2 = "Bem"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p2 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p2 = "Mal"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 2",})
+        return
     }
-    fmt.Println("**************************************************")
 
-    fmt.Println("Como você se sente no ambiente do campus?")
-	fmt.Println("1 - BEM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta3{
         case 1:
-        fmt.Println("BEM")
-        
+        p3 = "Bem"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p3 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p3 = "Mal"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 3",})
+        return
     }
-    fmt.Println("**************************************************")
 
-    fmt.Printf("\n***SAÚDE MENTAL***\n")
-
-    fmt.Println("Como você se sentiu emocionalmente nesta semana?")
-	fmt.Println("1 - BEM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta4{
         case 1:
-        fmt.Println("BEM")
-        
+        p4 = "Bem"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p4 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p4 = "Mal"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 4",})
+        return
     }
-    fmt.Println("**************************************************")
 
-    fmt.Println("Você se sente motivado(a) para estudar?")
-    fmt.Println("1 - BEM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta5{
         case 1:
-        fmt.Println("BEM")
-        
+        p5 = "Bom"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p5 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p5 = "Ruim"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 5",})
+        return
     }
-    fmt.Println("**************************************************")
 
-	fmt.Println("Você sente ansiedade durante as atividades escolares?")
-    fmt.Println("1 - NÃO\n2 - MAIS OU MENOS\n3 - SIM")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta6{
         case 1:
-        fmt.Println("NÃO")
-        
+        p6 = "Sim"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p6 = "Mais ou menos"
         case 3:
-        fmt.Println("SIM")
-
+        p6 = "Não"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 6",})
+        return
     }
-    fmt.Println("**************************************************")
 
-    fmt.Println("Você sente que está sendo ouvido dentro da escola?")
-	fmt.Println("1 - BEM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta7{
         case 1:
-        fmt.Println("BEM")
-        
+        p7 = "Não"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p7 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p7 = "Sim"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 7",})
+        return
     }
-    fmt.Println("**************************************************")
 
-	fmt.Printf("\n***BEM-ESTAR***\n")
-
-    fmt.Println("Como está sua qualidade de sono recentemente?")
-	fmt.Println("1 - BOM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta8{
         case 1:
-        fmt.Println("BOM")
-        
+        p8 = "Sim"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p8 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p8 = "Não"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 8",})
+        return
     }
-    fmt.Println("**************************************************")
 
-    fmt.Println("Como você avalia seu bem-estar geral atualmente?")
-	fmt.Println("1 - BOM\n2 - MAIS OU MENOS\n3 - MAL")
-    fmt.Scan(&numero)
-
-    switch numero{
+    switch questionario.Pergunta9{
         case 1:
-        fmt.Println("BOM")
-        
+        p9 = "Bom"
         case 2:
-        fmt.Println("MAIS OU MENOS")
-
+        p9 = "Mais ou menos"
         case 3:
-        fmt.Println("MAL")
-
+        p9 = "Ruim"
         default:
-        fmt.Println("ERRO! digite um número válido!")
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 9",})
+        return
     }
-    fmt.Println("**************************************************")
 
-    leitor := bufio.NewReader(os.Stdin)
-	fmt.Println("DESEJA RELATAR ALGUMA SITUAÇÃO?")
-	leitor.ReadString('\n') // Limpa o buffer de entrada
-	comentario, _ = leitor.ReadString('\n')
-	fmt.Println("Comentário registrado:", comentario)
+    switch questionario.Pergunta10{
+        case 1:
+        p10 = "Bem"
+        case 2:
+        p10 = "Mais ou menos"
+        case 3:
+        p10 = "Mal"
+        default:
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{
+            "erro": "resposta inválida para pergunta 10",})
+        return
+    }
+
+    err = database.DB.QueryRow("SELECT usuarioID FROM usuarios WHERE usuarioID = $1",
+        questionario.UsuarioID,).Scan(&questionario.UsuarioID)
+
+    if err != nil {
+        http.Error(w, "usuário não encontrado", http.StatusBadRequest)
+        return
+    }
+
+    var questionarioID int
+
+	err = database.DB.QueryRow(`
+		INSERT INTO questionario(
+            usuarioID, 
+            sala_de_aula,
+			conversar_com_colegas,
+			professores,
+			campus,
+			emocional_semana,
+			motivacao_estudos,
+			ansiedade_escolar,
+			voz_na_escola,
+			qualidade_sono,
+			bem_estar_geral, 
+            comentario)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+		RETURNING id
+	`, questionario.UsuarioID, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, questionario.Comentario).Scan(&questionarioID)
+
+	if err != nil{
+		json.NewEncoder(w).Encode(map[string]string{
+			"erro": "erro ao salvar no banco",
+		})
+        return
+	}
+
+    type Response struct{
+        ID int `json:"id"`
+        UsuarioID int `json:"usuario_id"`
+        Pergunta1 string `json:"sala_de_aula"`
+        Pergunta2 string `json:"conversar_com_colegas"`
+        Pergunta3 string `json:"professores"`
+        Pergunta4 string `json:"campus"`
+        Pergunta5 string `json:"emocional_semana"`
+        Pergunta6 string `json:"motivacao_estudos"`
+        Pergunta7 string `json:"ansiedade_escolar"`
+        Pergunta8 string `json:"voz_na_escola"`
+        Pergunta9 string `json:"qualidade_sono"`
+        Pergunta10 string `json:"bem_estar_geral"`
+        Comentario string `json:"quer_deixar_um_comentario?"`
+    }
+
+    resp := Response{
+        ID: questionarioID,
+        UsuarioID: questionario.UsuarioID,
+        Pergunta1: p1,
+        Pergunta2: p2,
+        Pergunta3: p3,
+        Pergunta4: p4,
+        Pergunta5: p5,
+        Pergunta6: p6,
+        Pergunta7: p7,
+        Pergunta8: p8,
+        Pergunta9: p9,
+        Pergunta10: p10,
+        Comentario: questionario.Comentario,
+    }
+
+    err = json.NewEncoder(w).Encode(resp)
+    if err != nil{
+        http.Error(w, "Erro ao responder o JSON!", http.StatusBadRequest)
+    }
 }

@@ -6,8 +6,10 @@ import(
 )
 
 func Rotas(){
-	http.HandleFunc("/cadastro", controller.CadastrarUsuario)
-	http.HandleFunc("/questionario", controller.Questionario)
-
+	http.HandleFunc("/loginadmin", controller.PostLoginAdmin)
+	http.HandleFunc("/listarquestionario", controller.GetListarRespostasQuestionario)
+	http.HandleFunc("/buscarquestionario", controller.GetBuscarRespostasQuestionarioPorID)
+	http.HandleFunc("/cadastro", controller.PostCadastrarUsuario)
+	http.HandleFunc("/questionario", controller.PostResponderQuestionario)
 	http.ListenAndServe(":8080", nil)
 }

@@ -11,7 +11,7 @@ var DB *sql.DB
 func Database(){
 	var erro error
 	
-	DB, _ = sql.Open(
+	DB, erro = sql.Open(
 		"postgres", 
 		"host=localhost user=postgres password=admin dbname=Questionario port=5432 sslmode=disable",
 	)
@@ -32,31 +32,40 @@ func CriarTabela(){
 	fmt.Println("Criando tabelas")
 
 	_, erro := DB.Exec(`
+
+		CREATE TABLE IF NOT EXISTS admin(
+			email VARCHAR(100) NOT NULL UNIQUE,
+			senha VARCHAR(100) NOT NULL
+		);
+		INSERT INTO admin (email, senha) 
+		VALUES ('servicosocial@gmail.com', '123456')
+		ON CONFLICT (email) DO NOTHING;
+
 		CREATE TABLE IF NOT EXISTS usuarios(
-			Usuario_id SERIAL PRIMARY KEY,
+			usuarioID SERIAL PRIMARY KEY,
 			curso VARCHAR(50) NOT NULL,
 			turno VARCHAR(50) NOT NULL,
 			sexo VARCHAR(50) NOT NULL
 		);
 
 		CREATE TABLE IF NOT EXISTS questionario(
+			id SERIAL PRIMARY KEY,
+			usuarioID INT NOT NULL,
 
-			id_Usuario INT PRIMARY KEY,
-
-			sala_de_aula INT NOT NULL,
-			conversar_com_colegas INT NOT NULL,
-			professores INT NOT NULL,
-			campus INT NOT NULL,
-			emocional_semana INT NOT NULL,
-			motivacao_estudos INT NOT NULL,
-			ansiedade_escolar INT NOT NULL,
-			voz_na_escola INT NOT NULL,
-			qualidade_sono INT NOT NULL,
-			bem_estar_geral INT NOT NULL,
+			sala_de_aula VARCHAR(50) NOT NULL,
+			conversar_com_colegas VARCHAR(50) NOT NULL,
+			professores VARCHAR(50) NOT NULL,
+			campus VARCHAR(50) NOT NULL,
+			emocional_semana VARCHAR(50) NOT NULL,
+			motivacao_estudos VARCHAR(50) NOT NULL,
+			ansiedade_escolar VARCHAR(50) NOT NULL,
+			voz_na_escola VARCHAR(50) NOT NULL,
+			qualidade_sono VARCHAR(50) NOT NULL,
+			bem_estar_geral VARCHAR(50) NOT NULL,
 			comentario TEXT,
 
-			FOREIGN KEY (id_Usuario)
-			REFERENCES usuarios(Usuario_id)
+			FOREIGN KEY (usuarioID)
+			REFERENCES usuarios(usuarioID)
 		);
 	`)
 	if erro != nil{
