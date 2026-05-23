@@ -37,7 +37,7 @@ func CriarTabela(){
 			email VARCHAR(100) NOT NULL UNIQUE,
 			senha VARCHAR(100) NOT NULL
 		);
-		INSERT INTO admin (email, senha) 
+		INSERT INTO admin (email, senha)
 		VALUES ('servicosocial@gmail.com', '123456')
 		ON CONFLICT (email) DO NOTHING;
 

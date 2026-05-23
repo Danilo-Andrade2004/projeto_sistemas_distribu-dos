@@ -18,13 +18,23 @@ type Questionario struct{
     Pergunta8 int `json:"voz_na_escola"`
     Pergunta9 int `json:"qualidade_sono"`
     Pergunta10 int `json:"bem_estar_geral"`
-    Comentario string `json:"quer_deixar_um_comentario?"`
+    Comentario string `json:"quer_deixar_um_comentario"`
 }
 
-
+func pergunta(numero int) string{
+    switch numero{
+        case 1:
+            return "BEM"
+        case 2:
+            return "MAIS OU MENOS" 
+        case 3:
+            return "MAL" 
+        default:
+            return "ERRO! POR FAVOR DIGITE UM NÚMERO VÁLIDO!"
+    }
+}
 
 func PostResponderQuestionario(w http.ResponseWriter, r *http.Request){
-
     w.Header().Set("Content-Type", "application/json")
     
     var questionario Questionario
@@ -36,149 +46,29 @@ func PostResponderQuestionario(w http.ResponseWriter, r *http.Request){
 
     var p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 string
 
-    switch questionario.Pergunta1{
-        case 1:
-        p1 = "Bem"
-        case 2:
-        p1 = "Mais ou menos"
-        case 3:
-        p1 = "Mal"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 1",})
-        return
-    }
+    p1 = pergunta(questionario.Pergunta1)
+    p2 = pergunta(questionario.Pergunta2)
+    p3 = pergunta(questionario.Pergunta3)
+    p4 = pergunta(questionario.Pergunta4)
+    p5 = pergunta(questionario.Pergunta5)
+    p6 = pergunta(questionario.Pergunta6)
+    p7 = pergunta(questionario.Pergunta7)
+    p8 = pergunta(questionario.Pergunta8)
+    p9 = pergunta(questionario.Pergunta9)
+    p10 = pergunta(questionario.Pergunta10)
+    const mensagemErro = "ERRO! POR FAVOR DIGITE UM NÚMERO VÁLIDO!"
 
-    switch questionario.Pergunta2{
-        case 1:
-        p2 = "Bem"
-        case 2:
-        p2 = "Mais ou menos"
-        case 3:
-        p2 = "Mal"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
+    if p1 == mensagemErro || p2 == mensagemErro || p3 == mensagemErro || p4 == mensagemErro ||
+       p5 == mensagemErro || p6 == mensagemErro || p7 == mensagemErro || p8 == mensagemErro ||
+       p9 == mensagemErro || p10 == mensagemErro{
         json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 2",})
-        return
-    }
-
-    switch questionario.Pergunta3{
-        case 1:
-        p3 = "Bem"
-        case 2:
-        p3 = "Mais ou menos"
-        case 3:
-        p3 = "Mal"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 3",})
-        return
-    }
-
-    switch questionario.Pergunta4{
-        case 1:
-        p4 = "Bem"
-        case 2:
-        p4 = "Mais ou menos"
-        case 3:
-        p4 = "Mal"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 4",})
-        return
-    }
-
-    switch questionario.Pergunta5{
-        case 1:
-        p5 = "Bom"
-        case 2:
-        p5 = "Mais ou menos"
-        case 3:
-        p5 = "Ruim"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 5",})
-        return
-    }
-
-    switch questionario.Pergunta6{
-        case 1:
-        p6 = "Sim"
-        case 2:
-        p6 = "Mais ou menos"
-        case 3:
-        p6 = "Não"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 6",})
-        return
-    }
-
-    switch questionario.Pergunta7{
-        case 1:
-        p7 = "Não"
-        case 2:
-        p7 = "Mais ou menos"
-        case 3:
-        p7 = "Sim"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 7",})
-        return
-    }
-
-    switch questionario.Pergunta8{
-        case 1:
-        p8 = "Sim"
-        case 2:
-        p8 = "Mais ou menos"
-        case 3:
-        p8 = "Não"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 8",})
-        return
-    }
-
-    switch questionario.Pergunta9{
-        case 1:
-        p9 = "Bom"
-        case 2:
-        p9 = "Mais ou menos"
-        case 3:
-        p9 = "Ruim"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 9",})
-        return
-    }
-
-    switch questionario.Pergunta10{
-        case 1:
-        p10 = "Bem"
-        case 2:
-        p10 = "Mais ou menos"
-        case 3:
-        p10 = "Mal"
-        default:
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{
-            "erro": "resposta inválida para pergunta 10",})
+			"erro!": "Uma ou mais respostas enviadas são inválidas, use apenas 1, 2 ou 3!",
+		})
         return
     }
 
     err = database.DB.QueryRow("SELECT usuarioID FROM usuarios WHERE usuarioID = $1",
         questionario.UsuarioID,).Scan(&questionario.UsuarioID)
-
     if err != nil {
         http.Error(w, "usuário não encontrado", http.StatusBadRequest)
         return
@@ -224,7 +114,7 @@ func PostResponderQuestionario(w http.ResponseWriter, r *http.Request){
         Pergunta8 string `json:"voz_na_escola"`
         Pergunta9 string `json:"qualidade_sono"`
         Pergunta10 string `json:"bem_estar_geral"`
-        Comentario string `json:"quer_deixar_um_comentario?"`
+        Comentario string `json:"quer_deixar_um_comentario"`
     }
 
     resp := Response{
