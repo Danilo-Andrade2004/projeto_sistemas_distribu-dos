@@ -66,6 +66,8 @@ func PostCadastrarUsuario(w http.ResponseWriter, r *http.Request){
 		sexo = "Masculino"
 	case 2:
 		sexo = "Feminino"
+	case 3:
+		sexo = "Outro"
 	default:
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{
