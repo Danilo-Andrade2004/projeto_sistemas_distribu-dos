@@ -24,11 +24,15 @@ type Questionario struct{
 func pergunta(numero int) string{
     switch numero{
         case 1:
-            return "BEM"
+            return "MUITO BEM"
         case 2:
-            return "MAIS OU MENOS" 
+            return "BEM" 
         case 3:
+            return "MAIS OU MENOS" 
+        case 4:
             return "MAL" 
+        case 5:
+            return "MUITO MAL" 
         default:
             return "ERRO! POR FAVOR DIGITE UM NÚMERO VÁLIDO!"
     }
