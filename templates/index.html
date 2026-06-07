@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionário Emocional IFRN</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <img src="img/logo.png" alt="Logo IFRN">
+    <div class="logo-text">
+      <strong>IFRN</strong>
+      <span>Questionário Emocional<br>Nova Cruz-RN</span>
+    </div>
+  </div>
+
+  <h1 class="header-title">Questionário Emocional</h1>
+
+  <a href="loginadmin.html" class="btn-login-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+      <polyline points="10 17 15 12 10 7"/>
+      <line x1="15" y1="12" x2="3" y2="12"/>
+    </svg>
+    LOGIN ADM
+  </a>
+</header>
+<div class="divider"></div>
+
+<main>
+  <div class="intro-text">
+    <h2>Bem-vindo(a)! 👋</h2>
+    <p>Suas respostas são anônimas. Preencha os campos abaixo para começar.</p>
+  </div>
+
+  <div class="form-card">
+    <div class="form-grid">
+
+      <div class="form-group">
+        <h3>Informe o seu Curso</h3>
+        <div class="options-grid">
+          <button class="opt-btn" data-group="curso" data-value="1">Informática</button>
+          <button class="opt-btn" data-group="curso" data-value="2">ADM</button>
+          <button class="opt-btn" data-group="curso" data-value="3">Química</button>
+          <button class="opt-btn" data-group="curso" data-value="4">ADM Sub</button>
+          <button class="opt-btn" data-group="curso" data-value="5">TPQ</button>
+          <button class="opt-btn" data-group="curso" data-value="6">TADS</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <h3>Informe o seu Turno</h3>
+        <div class="options-grid">
+          <button class="opt-btn" data-group="turno" data-value="1">Matutino</button>
+          <button class="opt-btn" data-group="turno" data-value="2">Vespertino</button>
+          <button class="opt-btn" data-group="turno" data-value="3">Noturno</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <h3>Informe o seu Gênero</h3>
+        <div class="options-grid">
+          <button class="opt-btn" data-group="sexo" data-value="1">Masculino</button>
+          <button class="opt-btn" data-group="sexo" data-value="2">Feminino</button>
+          <button class="opt-btn" data-group="sexo" data-value="3">Outro</button>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-enviar" id="btn-enviar" onclick="enviar()">ENVIAR</button>
+    <p class="msg-erro" id="msg-erro">⚠️ Por favor, selecione uma opção em cada categoria.</p>
+  </div>
+</main>
+
+<footer>IFRN — Campus Nova Cruz · Apoio e Bem-Estar Estudantil</footer>
+<div class="toast" id="toast"></div>
+
+<script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login ADM — Questionário Emocional IFRN</title>
+  <link rel="stylesheet" href="css/loginadmin.css">
+</head>
+<body>
+
+<!-- ================= TELA DE LOGIN ================= -->
+<div id="tela-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="img/logo.png" alt="Logo IFRN">
+      <div class="login-logo-text">
+        <strong>IFRN</strong>
+        <span>Questionário Emocional · Nova Cruz-RN</span>
+      </div>
+    </div>
+
+    <h2>Área ADM</h2>
+    <p class="subtitle">Acesso restrito à equipe administrativa</p>
+
+    <div class="input-group">
+      <label>E-mail</label>
+      <input type="email" id="login-email" placeholder="admin@ifrn.edu.br" autocomplete="email">
+    </div>
+    <div class="input-group">
+      <label>Senha</label>
+      <input type="password" id="login-senha" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+    <p class="msg-erro-login" id="msg-erro-login">❌ E-mail ou senha inválidos.</p>
+
+    <a href="index.html" class="link-voltar">← Voltar ao questionário</a>
+  </div>
+</div>
+
+<!-- ================= DASHBOARD ================= -->
+<div id="tela-dashboard">
+  <div class="dash-header">
+    <div class="dash-logo">
+      <img src="img/logo.png" alt="Logo IFRN">
+      <div class="dash-logo-text">
+        <strong>IFRN</strong>
+        <span>Questionário Emocional<br>Nova Cruz-RN</span>
+      </div>
+    </div>
+
+    <h1 class="dash-title">Painel Administrativo</h1>
+
+    <button class="btn-sair" onclick="sair()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Sair
+    </button>
+  </div>
+  <div class="divider"></div>
+
+  <div class="dash-main">
+    <div class="busca-bar">
+      <label>🔍 Buscar por ID:</label>
+      <input type="number" id="input-id" placeholder="Ex: 1" min="1">
+      <button class="btn-buscar" onclick="buscarPorId()">Buscar</button>
+      <button class="btn-listar" onclick="listarTodos()">Listar Todos</button>
+    </div>
+
+    <div class="tabela-wrap">
+      <div class="tabela-header">
+        <h3>📋 Respostas do Questionário</h3>
+        <span class="badge-total" id="badge-total">0 registros</span>
+      </div>
+      <div class="tabela-scroll">
+        <div id="tabela-conteudo">
+          <div class="empty-state">
+            <div class="icon">📊</div>
+            <p>Clique em "Listar Todos" para ver as respostas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/loginadmin.js"></script>
+</body>
+</html>
