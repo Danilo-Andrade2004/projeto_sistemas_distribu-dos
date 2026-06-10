@@ -28,11 +28,19 @@ func pergunta(numero int) string{
         case 2:
             return "BEM" 
         case 3:
+<<<<<<< HEAD
             return "REGULAR" 
         case 4:
             return "MAL"
         case 5:
             return "MUITO MAL"
+=======
+            return "MAIS OU MENOS" 
+        case 4:
+            return "MAL" 
+        case 5:
+            return "MUITO MAL" 
+>>>>>>> main
         default:
             return "ERRO! POR FAVOR DIGITE UM NÚMERO VÁLIDO!"
     }
