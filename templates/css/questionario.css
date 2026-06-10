@@ -26,7 +26,11 @@ header {
   box-shadow: 0 3px 15px rgba(0,0,0,0.3);
 }
 
-.logo-area { display: flex; align-items: center; gap: 12px; }
+.logo-area { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+}
 
 .logo-area img {
   width: 50px;

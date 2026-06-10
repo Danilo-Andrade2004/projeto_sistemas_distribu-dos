@@ -142,10 +142,14 @@ body {
   transition: color 0.2s;
 }
 
-.link-voltar:hover { color: var(--roxo); }
+.link-voltar:hover { 
+  color: var(--roxo); 
+}
 
 /* ========== DASHBOARD ========== */
-#tela-dashboard { display: none; }
+#tela-dashboard { 
+  display: none; 
+}
 
 .dash-header {
   background: var(--roxo);
@@ -156,7 +160,11 @@ body {
   box-shadow: 0 3px 15px rgba(0,0,0,0.3);
 }
 
-.dash-logo { display: flex; align-items: center; gap: 12px; }
+.dash-logo { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+}
 
 .dash-logo img {
   width: 48px;

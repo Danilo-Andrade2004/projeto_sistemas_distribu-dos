@@ -21,7 +21,7 @@ func Rotas() {
 	fs := http.FileServer(http.Dir("./templates")) 
 	http.Handle("/", fs)
 
-	
+
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Printf("Erro ao iniciar o servidor: %v\n", err)
